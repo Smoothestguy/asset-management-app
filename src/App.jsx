@@ -265,94 +265,126 @@ function App() {
   );
 
   const MobileHeader = () => (
-    <div className="lg:hidden fixed top-0 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-gray-700/50 z-40 safe-area-top">
+    <div className="lg:hidden fixed top-0 left-0 right-0 bg-gradient-to-r from-gray-900/98 via-gray-800/98 to-gray-900/98 backdrop-blur-xl border-b border-cyan-500/20 z-40 safe-area-top shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-gray-400 hover:text-white min-h-[44px] min-w-[44px]"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </Button>
-          <h1 className="text-lg font-bold text-white">ASSET TRACKER</h1>
-        </div>
+          <motion.div whileTap={{ scale: 0.95 }} whileHover={{ scale: 1.05 }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-300 hover:text-cyan-400 min-h-[44px] min-w-[44px] hover:bg-cyan-500/10 transition-all duration-200 rounded-xl"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </Button>
+          </motion.div>
 
-        {/* Search and Add buttons for mobile */}
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-400 hover:text-white min-h-[44px] min-w-[44px]"
-          >
-            <Search className="w-5 h-5" />
-          </Button>
-          <Button
-            onClick={() => setIsAddDialogOpen(true)}
-            className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white shadow-[0_0_15px_rgba(0,255,255,0.4)] min-h-[44px]"
-            size="sm"
-          >
-            <Plus className="w-4 h-4" />
-          </Button>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          {/* User Profile */}
           <div className="flex items-center space-x-2">
-            <Avatar className="w-8 h-8 border-2 border-cyan-500/50">
-              <AvatarFallback className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs">
+            <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(0,255,255,0.3)]">
+              <Zap className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-white neon-text">
+                ASSET TRACKER
+              </h1>
+              <div className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-xs text-green-400 font-medium">
+                  ONLINE
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action buttons for mobile */}
+        <div className="flex items-center space-x-2">
+          <motion.div whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-gray-300 hover:text-cyan-400 min-h-[44px] min-w-[44px] hover:bg-cyan-500/10 transition-all duration-200 rounded-xl"
+            >
+              <Search className="w-5 h-5" />
+            </Button>
+          </motion.div>
+
+          {/* Portfolio Value Badge - hidden on small screens */}
+          <div className="hidden sm:flex items-center bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-lg px-2 py-1">
+            <DollarSign className="w-3 h-3 text-green-400 mr-1" />
+            <span className="text-xs font-bold text-green-400">
+              {formatCurrency(portfolioSummary.totalValue)}
+            </span>
+          </div>
+
+          {/* Add Asset Button */}
+          <motion.div whileTap={{ scale: 0.95 }} whileHover={{ scale: 1.05 }}>
+            <Button
+              onClick={() => setIsAddDialogOpen(true)}
+              className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white shadow-[0_0_15px_rgba(0,255,255,0.4)] min-h-[44px] min-w-[44px] rounded-xl transition-all duration-200"
+              size="sm"
+            >
+              <Plus className="w-5 h-5" />
+            </Button>
+          </motion.div>
+
+          {/* User Profile */}
+          <motion.div whileTap={{ scale: 0.95 }}>
+            <Avatar className="w-10 h-10 border-2 border-cyan-500/50 shadow-[0_0_10px_rgba(0,255,255,0.3)]">
+              <AvatarFallback className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm font-bold">
                 {user?.name?.charAt(0)?.toUpperCase() ||
                   user?.email?.charAt(0)?.toUpperCase() ||
                   "U"}
               </AvatarFallback>
             </Avatar>
-            <span className="text-white text-sm font-medium hidden sm:block">
-              {user?.name || user?.email?.split("@")[0]}
-            </span>
-          </div>
-
-          {/* Logout Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={logout}
-            className="text-gray-400 hover:text-red-400 transition-colors"
-            title="Logout"
-          >
-            <LogOut className="w-4 h-4" />
-          </Button>
-
-          {/* Add Asset Button */}
-          <Button
-            onClick={() => setIsAddDialogOpen(true)}
-            className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white shadow-[0_0_15px_rgba(0,255,255,0.4)]"
-            size="sm"
-          >
-            <Plus className="w-4 h-4" />
-          </Button>
+          </motion.div>
         </div>
       </div>
     </div>
   );
 
   const DashboardContent = () => (
-    <div className="space-y-6 lg:space-y-8">
+    <div className="space-y-6 lg:space-y-8 relative">
+      {/* Mobile Background Enhancement */}
+      <div className="lg:hidden absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl animate-pulse" />
+        <div
+          className="absolute top-20 right-0 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        />
+        <div
+          className="absolute bottom-0 left-1/2 w-28 h-28 bg-blue-500/5 rounded-full blur-2xl animate-pulse"
+          style={{ animationDelay: "2s" }}
+        />
+      </div>
+
       {/* Header - Mobile optimized */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0"
+        className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 relative z-10"
       >
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2 neon-text">
+          <motion.h1
+            className="text-2xl lg:text-3xl font-bold text-white mb-2 neon-text"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
             DASHBOARD
-          </h1>
-          <p className="text-gray-400">Track your assets with precision</p>
+          </motion.h1>
+          <motion.p
+            className="text-gray-400"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            Track your assets with precision
+          </motion.p>
         </div>
 
         {/* Desktop search and add button */}
@@ -383,46 +415,68 @@ function App() {
         transition={{ delay: 0.1 }}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6"
       >
-        <Card className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border-cyan-500/30 backdrop-blur-sm">
-          <CardContent className="p-4 lg:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-cyan-400 text-sm font-medium">Total Value</p>
-                <p className="text-xl lg:text-2xl font-bold text-white">
-                  {formatCurrency(portfolioSummary.totalValue)}
-                </p>
-              </div>
-              <div className="p-2 lg:p-3 bg-cyan-500/20 rounded-lg">
-                <DollarSign className="w-5 h-5 lg:w-6 lg:h-6 text-cyan-400" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border-green-500/30 backdrop-blur-sm">
-          <CardContent className="p-4 lg:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-400 text-sm font-medium">
-                  Total Gain/Loss
-                </p>
-                <p
-                  className={`text-xl lg:text-2xl font-bold ${
-                    portfolioSummary.totalGainLoss >= 0
-                      ? "text-green-400"
-                      : "text-red-400"
-                  }`}
+        <motion.div
+          whileHover={{ scale: 1.02, y: -4 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
+          <Card className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border-cyan-500/30 backdrop-blur-sm hover:border-cyan-400/50 transition-all duration-300 cursor-pointer shadow-[0_4px_20px_rgba(0,255,255,0.1)] hover:shadow-[0_8px_30px_rgba(0,255,255,0.2)]">
+            <CardContent className="p-4 lg:p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-cyan-400 text-sm font-medium">
+                    Total Value
+                  </p>
+                  <p className="text-xl lg:text-2xl font-bold text-white">
+                    {formatCurrency(portfolioSummary.totalValue)}
+                  </p>
+                </div>
+                <motion.div
+                  className="p-2 lg:p-3 bg-cyan-500/20 rounded-lg"
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  {portfolioSummary.totalGainLoss >= 0 ? "+" : ""}
-                  {formatCurrency(portfolioSummary.totalGainLoss)}
-                </p>
+                  <DollarSign className="w-5 h-5 lg:w-6 lg:h-6 text-cyan-400" />
+                </motion.div>
               </div>
-              <div className="p-2 lg:p-3 bg-green-500/20 rounded-lg">
-                <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 text-green-400" />
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.02, y: -4 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
+          <Card className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border-green-500/30 backdrop-blur-sm hover:border-green-400/50 transition-all duration-300 cursor-pointer shadow-[0_4px_20px_rgba(0,255,0,0.1)] hover:shadow-[0_8px_30px_rgba(0,255,0,0.2)]">
+            <CardContent className="p-4 lg:p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-green-400 text-sm font-medium">
+                    Total Gain/Loss
+                  </p>
+                  <p
+                    className={`text-xl lg:text-2xl font-bold ${
+                      portfolioSummary.totalGainLoss >= 0
+                        ? "text-green-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {portfolioSummary.totalGainLoss >= 0 ? "+" : ""}
+                    {formatCurrency(portfolioSummary.totalGainLoss)}
+                  </p>
+                </div>
+                <motion.div
+                  className="p-2 lg:p-3 bg-green-500/20 rounded-lg"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 text-green-400" />
+                </motion.div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         <Card className="bg-gradient-to-br from-purple-500/20 to-violet-500/20 border-purple-500/30 backdrop-blur-sm">
           <CardContent className="p-4 lg:p-6">
@@ -666,7 +720,7 @@ function App() {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="lg:ml-64 pt-16 lg:pt-0 px-4 py-6 lg:p-6 relative z-10 min-h-screen">
+      <div className="lg:ml-64 pt-16 lg:pt-0 px-4 py-6 lg:p-6 pb-8 lg:pb-6 safe-area-bottom relative z-10 min-h-screen">
         <AnimatePresence mode="wait">
           {activeTab === "dashboard" && (
             <motion.div
