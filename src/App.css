@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -135,7 +135,7 @@
 
 /* Futuristic Typography */
 .futuristic-title {
-  font-family: 'Orbitron', monospace;
+  font-family: "Orbitron", monospace;
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -143,16 +143,15 @@
 
 /* Neon Glow Animations */
 @keyframes neon-pulse {
-  0%, 100% {
-    text-shadow: 
-      0 0 calc(5px * var(--neon-intensity)) var(--theme-primary),
+  0%,
+  100% {
+    text-shadow: 0 0 calc(5px * var(--neon-intensity)) var(--theme-primary),
       0 0 calc(10px * var(--neon-intensity)) var(--theme-primary),
       0 0 calc(15px * var(--neon-intensity)) var(--theme-primary),
       0 0 calc(20px * var(--neon-intensity)) var(--theme-primary);
   }
   50% {
-    text-shadow: 
-      0 0 calc(2px * var(--neon-intensity)) var(--theme-primary),
+    text-shadow: 0 0 calc(2px * var(--neon-intensity)) var(--theme-primary),
       0 0 calc(5px * var(--neon-intensity)) var(--theme-primary),
       0 0 calc(8px * var(--neon-intensity)) var(--theme-primary),
       0 0 calc(12px * var(--neon-intensity)) var(--theme-primary);
@@ -160,19 +159,20 @@
 }
 
 @keyframes border-glow {
-  0%, 100% {
-    box-shadow: 
-      0 0 calc(5px * var(--neon-intensity)) var(--theme-primary),
+  0%,
+  100% {
+    box-shadow: 0 0 calc(5px * var(--neon-intensity)) var(--theme-primary),
       0 0 calc(10px * var(--neon-intensity)) var(--theme-primary),
       0 0 calc(15px * var(--neon-intensity)) var(--theme-primary),
-      inset 0 0 calc(5px * var(--neon-intensity)) rgba(255, 255, 255, calc(0.1 * var(--neon-intensity)));
+      inset 0 0 calc(5px * var(--neon-intensity))
+        rgba(255, 255, 255, calc(0.1 * var(--neon-intensity)));
   }
   50% {
-    box-shadow: 
-      0 0 calc(10px * var(--neon-intensity)) var(--theme-primary),
+    box-shadow: 0 0 calc(10px * var(--neon-intensity)) var(--theme-primary),
       0 0 calc(20px * var(--neon-intensity)) var(--theme-primary),
       0 0 calc(30px * var(--neon-intensity)) var(--theme-primary),
-      inset 0 0 calc(10px * var(--neon-intensity)) rgba(255, 255, 255, calc(0.2 * var(--neon-intensity)));
+      inset 0 0 calc(10px * var(--neon-intensity))
+        rgba(255, 255, 255, calc(0.2 * var(--neon-intensity)));
   }
 }
 
@@ -191,7 +191,8 @@
 }
 
 @keyframes particle-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
     opacity: 0.3;
   }
@@ -262,37 +263,34 @@
 
 /* Neon Text Effects */
 .neon-text {
-  animation: neon-pulse calc(2s / var(--animation-speed)) ease-in-out infinite alternate;
+  animation: neon-pulse calc(2s / var(--animation-speed)) ease-in-out infinite
+    alternate;
 }
 
 .neon-cyan {
   color: var(--theme-primary);
-  text-shadow: 
-    0 0 calc(5px * var(--neon-intensity)) var(--theme-primary),
+  text-shadow: 0 0 calc(5px * var(--neon-intensity)) var(--theme-primary),
     0 0 calc(10px * var(--neon-intensity)) var(--theme-primary),
     0 0 calc(15px * var(--neon-intensity)) var(--theme-primary);
 }
 
 .neon-purple {
   color: var(--theme-secondary);
-  text-shadow: 
-    0 0 calc(5px * var(--neon-intensity)) var(--theme-secondary),
+  text-shadow: 0 0 calc(5px * var(--neon-intensity)) var(--theme-secondary),
     0 0 calc(10px * var(--neon-intensity)) var(--theme-secondary),
     0 0 calc(15px * var(--neon-intensity)) var(--theme-secondary);
 }
 
 .neon-orange {
   color: var(--theme-accent);
-  text-shadow: 
-    0 0 calc(5px * var(--neon-intensity)) var(--theme-accent),
+  text-shadow: 0 0 calc(5px * var(--neon-intensity)) var(--theme-accent),
     0 0 calc(10px * var(--neon-intensity)) var(--theme-accent),
     0 0 calc(15px * var(--neon-intensity)) var(--theme-accent);
 }
 
 .neon-green {
   color: var(--theme-success);
-  text-shadow: 
-    0 0 calc(5px * var(--neon-intensity)) var(--theme-success),
+  text-shadow: 0 0 calc(5px * var(--neon-intensity)) var(--theme-success),
     0 0 calc(10px * var(--neon-intensity)) var(--theme-success),
     0 0 calc(15px * var(--neon-intensity)) var(--theme-success);
 }
@@ -304,7 +302,7 @@
 }
 
 .modern-border::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -315,7 +313,7 @@
 }
 
 .modern-border::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   right: -100%;
@@ -391,19 +389,23 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: all 0.3s ease;
-  box-shadow: 
-    0 0 20px rgba(0, 212, 255, 0.4),
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.4),
     inset 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .modern-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -413,8 +415,7 @@
 
 .modern-btn:hover {
   transform: scale(1.05);
-  box-shadow: 
-    0 0 30px rgba(0, 212, 255, 0.6),
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.6),
     inset 0 0 30px rgba(255, 255, 255, 0.2);
   animation: nitro-boost 0.6s ease-out;
 }
@@ -441,13 +442,18 @@
 }
 
 .modern-progress-fill::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   animation: speed-lines 2s linear infinite;
 }
 
@@ -460,7 +466,7 @@
 }
 
 .modern-nav-item::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -487,7 +493,7 @@
 }
 
 .speedometer::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -506,7 +512,7 @@
 }
 
 .modern-card-enhanced::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -2px;
   left: -2px;
@@ -542,11 +548,11 @@
   .modern-hover:hover {
     transform: translateY(-4px) scale(1.01);
   }
-  
+
   .particle {
     display: none;
   }
-  
+
   .modern-border::before,
   .modern-border::after {
     height: 1px;
@@ -562,11 +568,110 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .particle,
   .modern-border::before,
   .modern-border::after {
     display: none;
+  }
+}
+
+/* iPhone 16 Pro Max and modern mobile optimizations */
+@media (max-width: 430px) {
+  /* iPhone 16 Pro Max portrait */
+  .mobile-optimized {
+    font-size: 16px !important; /* Prevent zoom on input focus */
+  }
+
+  .mobile-card {
+    padding: 1rem !important;
+  }
+
+  .mobile-touch-target {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  /* Reduce text sizes for mobile */
+  .text-3xl {
+    font-size: 1.875rem !important; /* 30px */
+  }
+
+  .text-2xl {
+    font-size: 1.5rem !important; /* 24px */
+  }
+
+  /* Better mobile spacing */
+  .space-y-8 > * + * {
+    margin-top: 1.5rem !important; /* 24px instead of 32px */
+  }
+
+  .gap-6 {
+    gap: 1rem !important; /* 16px instead of 24px */
+  }
+}
+
+@media (max-width: 932px) and (orientation: landscape) {
+  /* iPhone 16 Pro Max landscape */
+  .mobile-landscape {
+    padding-top: 0 !important;
+  }
+
+  /* Reduce header height in landscape */
+  .pt-16 {
+    padding-top: 3rem !important; /* 48px instead of 64px */
+  }
+}
+
+/* Safe area support for iPhone notch/Dynamic Island */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Improved touch targets for mobile */
+@media (max-width: 1024px) {
+  button,
+  .cursor-pointer {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better mobile scrolling */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Reduce motion for better mobile performance */
+  .modern-hover:hover {
+    transform: translateY(-2px) scale(1.01) !important;
+  }
+
+  /* Hide particles on mobile for better performance */
+  .particle {
+    display: none !important;
+  }
+}
+
+/* Large mobile devices (like iPhone 16 Pro Max) */
+@media (min-width: 375px) and (max-width: 1024px) {
+  .mobile-large-text {
+    font-size: 1.125rem; /* 18px */
+  }
+
+  .mobile-large-padding {
+    padding: 1.25rem; /* 20px */
   }
 }
 
@@ -575,14 +680,13 @@
   .modern-hover:hover {
     transform: translateY(-12px) scale(1.03);
   }
-  
+
   .modern-btn:hover {
     transform: scale(1.08);
   }
-  
+
   .particle {
     width: 3px;
     height: 3px;
   }
 }
-

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   LayoutDashboard,
   Package,
@@ -150,10 +151,10 @@ function App() {
     <motion.div
       initial={{ x: -300 }}
       animate={{ x: 0 }}
-      className="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-gray-900/95 to-black/95 backdrop-blur-xl border-r border-gray-700/50 z-50"
+      className="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-gray-900/95 to-black/95 backdrop-blur-xl border-r border-gray-700/50 z-50 flex flex-col"
     >
-      {/* Logo */}
-      <div className="p-6 border-b border-gray-700/50">
+      {/* Logo - Fixed at top */}
+      <div className="p-6 border-b border-gray-700/50 flex-shrink-0">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(0,255,255,0.4)]">
             <Zap className="w-6 h-6 text-white" />
@@ -167,37 +168,39 @@ function App() {
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="p-4 space-y-2">
-        {navigation.map((item, index) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id;
-          return (
-            <motion.button
-              key={item.id}
-              onClick={() => {
-                setActiveTab(item.id);
-                setIsMobileMenuOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300 border ${getNavColor(
-                item.color,
-                isActive
-              )}`}
-              whileHover={{ scale: 1.02, x: 4 }}
-              whileTap={{ scale: 0.98 }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="font-medium">{item.name}</span>
-            </motion.button>
-          );
-        })}
-      </nav>
+      {/* Scrollable Navigation */}
+      <ScrollArea className="flex-1">
+        <nav className="p-4 space-y-2">
+          {navigation.map((item, index) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <motion.button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300 border min-h-[44px] ${getNavColor(
+                  item.color,
+                  isActive
+                )}`}
+                whileHover={{ scale: 1.02, x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-medium">{item.name}</span>
+              </motion.button>
+            );
+          })}
+        </nav>
+      </ScrollArea>
 
-      {/* User Profile Section */}
-      <div className="p-4 mt-4">
+      {/* Fixed User Profile at bottom */}
+      <div className="p-4 border-t border-gray-700/50 flex-shrink-0">
         <Card className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700/50 backdrop-blur-sm">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
@@ -218,7 +221,7 @@ function App() {
                 variant="ghost"
                 size="sm"
                 onClick={logout}
-                className="text-gray-400 hover:text-red-400 transition-colors p-2"
+                className="text-gray-400 hover:text-red-400 transition-colors p-2 min-h-[44px] min-w-[44px]"
                 title="Logout"
               >
                 <LogOut className="w-4 h-4" />
@@ -229,7 +232,7 @@ function App() {
       </div>
 
       {/* Portfolio Summary */}
-      <div className="p-4 mt-8">
+      <div className="p-4">
         <Card className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700/50 backdrop-blur-sm">
           <CardContent className="p-4">
             <div className="text-center">
@@ -262,22 +265,40 @@ function App() {
   );
 
   const MobileHeader = () => (
-    <div className="lg:hidden fixed top-0 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-gray-700/50 z-40">
+    <div className="lg:hidden fixed top-0 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-gray-700/50 z-40 safe-area-top">
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-3">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-gray-400 hover:text-white"
+            className="text-gray-400 hover:text-white min-h-[44px] min-w-[44px]"
           >
             {isMobileMenuOpen ? (
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             ) : (
-              <Menu className="w-5 h-5" />
+              <Menu className="w-6 h-6" />
             )}
           </Button>
           <h1 className="text-lg font-bold text-white">ASSET TRACKER</h1>
+        </div>
+
+        {/* Search and Add buttons for mobile */}
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-gray-400 hover:text-white min-h-[44px] min-w-[44px]"
+          >
+            <Search className="w-5 h-5" />
+          </Button>
+          <Button
+            onClick={() => setIsAddDialogOpen(true)}
+            className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white shadow-[0_0_15px_rgba(0,255,255,0.4)] min-h-[44px]"
+            size="sm"
+          >
+            <Plus className="w-4 h-4" />
+          </Button>
         </div>
 
         <div className="flex items-center space-x-2">
@@ -320,21 +341,22 @@ function App() {
   );
 
   const DashboardContent = () => (
-    <div className="space-y-8">
-      {/* Header */}
+    <div className="space-y-6 lg:space-y-8">
+      {/* Header - Mobile optimized */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0"
+        className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0"
       >
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2 neon-text">
+          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2 neon-text">
             DASHBOARD
           </h1>
           <p className="text-gray-400">Track your assets with precision</p>
         </div>
 
-        <div className="flex items-center space-x-4">
+        {/* Desktop search and add button */}
+        <div className="hidden lg:flex items-center space-x-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
@@ -354,38 +376,38 @@ function App() {
         </div>
       </motion.div>
 
-      {/* Portfolio Summary Cards */}
+      {/* Portfolio Summary Cards - Mobile optimized */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6"
       >
         <Card className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border-cyan-500/30 backdrop-blur-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-cyan-400 text-sm font-medium">Total Value</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-xl lg:text-2xl font-bold text-white">
                   {formatCurrency(portfolioSummary.totalValue)}
                 </p>
               </div>
-              <div className="p-3 bg-cyan-500/20 rounded-lg">
-                <DollarSign className="w-6 h-6 text-cyan-400" />
+              <div className="p-2 lg:p-3 bg-cyan-500/20 rounded-lg">
+                <DollarSign className="w-5 h-5 lg:w-6 lg:h-6 text-cyan-400" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border-green-500/30 backdrop-blur-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-green-400 text-sm font-medium">
                   Total Gain/Loss
                 </p>
                 <p
-                  className={`text-2xl font-bold ${
+                  className={`text-xl lg:text-2xl font-bold ${
                     portfolioSummary.totalGainLoss >= 0
                       ? "text-green-400"
                       : "text-red-400"
@@ -395,40 +417,42 @@ function App() {
                   {formatCurrency(portfolioSummary.totalGainLoss)}
                 </p>
               </div>
-              <div className="p-3 bg-green-500/20 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-green-400" />
+              <div className="p-2 lg:p-3 bg-green-500/20 rounded-lg">
+                <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 text-green-400" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-br from-purple-500/20 to-violet-500/20 border-purple-500/30 backdrop-blur-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-purple-400 text-sm font-medium">
                   Total Assets
                 </p>
-                <p className="text-2xl font-bold text-white">{assets.length}</p>
+                <p className="text-xl lg:text-2xl font-bold text-white">
+                  {assets.length}
+                </p>
               </div>
-              <div className="p-3 bg-purple-500/20 rounded-lg">
-                <Package className="w-6 h-6 text-purple-400" />
+              <div className="p-2 lg:p-3 bg-purple-500/20 rounded-lg">
+                <Package className="w-5 h-5 lg:w-6 lg:h-6 text-purple-400" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-gradient-to-br from-orange-500/20 to-red-500/20 border-orange-500/30 backdrop-blur-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-orange-400 text-sm font-medium">Favorites</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-xl lg:text-2xl font-bold text-white">
                   {assets.filter((a) => a.isFavorite).length}
                 </p>
               </div>
-              <div className="p-3 bg-orange-500/20 rounded-lg">
-                <Heart className="w-6 h-6 text-orange-400" />
+              <div className="p-2 lg:p-3 bg-orange-500/20 rounded-lg">
+                <Heart className="w-5 h-5 lg:w-6 lg:h-6 text-orange-400" />
               </div>
             </div>
           </CardContent>
@@ -441,12 +465,14 @@ function App() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white">Your Assets</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0">
+          <h2 className="text-lg lg:text-xl font-bold text-white">
+            Your Assets
+          </h2>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none"
+            className="bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none min-h-[44px]"
           >
             <option value="all">All Categories</option>
             {Object.values(ASSET_CATEGORIES).map((category) => (
@@ -457,7 +483,7 @@ function App() {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           {filteredAssets.map((asset, index) => {
             const category = ASSET_CATEGORIES[asset.category];
             const gainLoss = asset.currentValue - asset.purchasePrice;
@@ -640,7 +666,7 @@ function App() {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="lg:ml-64 pt-16 lg:pt-0 p-6 relative z-10">
+      <div className="lg:ml-64 pt-16 lg:pt-0 px-4 py-6 lg:p-6 relative z-10 min-h-screen">
         <AnimatePresence mode="wait">
           {activeTab === "dashboard" && (
             <motion.div
