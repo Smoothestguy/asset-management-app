@@ -1,285 +1,306 @@
-import { createContext, useContext, useState, useEffect } from 'react'
-import unifiedAuthService from '../services/unifiedAuthService'
-import firebaseAuthService from '../services/firebaseAuthService'
+import { createContext, useContext, useState, useEffect } from "react";
+import unifiedAuthService from "../services/unifiedAuthService";
+import firebaseAuthService from "../services/firebaseAuthService";
 
-const AuthContext = createContext()
+const AuthContext = createContext();
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  return context
-}
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [authMethod, setAuthMethod] = useState(null) // 'local', 'backend', 'firebase'
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authMethod, setAuthMethod] = useState(null); // 'local', 'backend', 'firebase'
 
   // Initialize auth state
   useEffect(() => {
     const initAuth = async () => {
       try {
-        setLoading(true)
-        
+        setLoading(true);
+
         // Initialize unified auth service
-        const currentUser = await unifiedAuthService.initialize()
-        
+        const currentUser = await unifiedAuthService.initialize();
+
         if (currentUser) {
-          setUser(currentUser)
-          setIsAuthenticated(true)
-          setAuthMethod(unifiedAuthService.getAuthMethod())
+          setUser(currentUser);
+          setIsAuthenticated(true);
+          setAuthMethod(unifiedAuthService.getAuthMethod());
         }
 
         // Set up Firebase Auth listener for real-time updates
-        const unsubscribe = firebaseAuthService.initAuthListener((firebaseUser) => {
-          if (firebaseUser && unifiedAuthService.getAuthMethod() === 'firebase') {
-            setUser(firebaseUser)
-            setIsAuthenticated(true)
-            setAuthMethod('firebase')
-          } else if (!firebaseUser && unifiedAuthService.getAuthMethod() === 'firebase') {
-            // Firebase user signed out
-            setUser(null)
-            setIsAuthenticated(false)
-            setAuthMethod(null)
-            unifiedAuthService.clearSession()
+        const unsubscribe = firebaseAuthService.initAuthListener(
+          (firebaseUser) => {
+            if (
+              firebaseUser &&
+              unifiedAuthService.getAuthMethod() === "firebase"
+            ) {
+              setUser(firebaseUser);
+              setIsAuthenticated(true);
+              setAuthMethod("firebase");
+            } else if (
+              !firebaseUser &&
+              unifiedAuthService.getAuthMethod() === "firebase"
+            ) {
+              // Firebase user signed out
+              setUser(null);
+              setIsAuthenticated(false);
+              setAuthMethod(null);
+              unifiedAuthService.clearSession();
+            }
           }
-        })
+        );
 
-        setLoading(false)
-        return unsubscribe
+        setLoading(false);
+        return unsubscribe;
       } catch (error) {
-        console.error('Error initializing auth:', error)
-        setLoading(false)
+        console.error("Error initializing auth:", error);
+        setLoading(false);
       }
-    }
+    };
 
-    const cleanup = initAuth()
+    const cleanup = initAuth();
     return () => {
-      if (cleanup && typeof cleanup === 'function') {
-        cleanup()
+      if (cleanup && typeof cleanup === "function") {
+        cleanup();
       }
-    }
-  }, [])
+    };
+  }, []);
 
   const login = async (email, password, useBackend = false) => {
     try {
-      setLoading(true)
-      
-      let result
+      setLoading(true);
+
+      let result;
       if (useBackend) {
-        result = await unifiedAuthService.loginWithBackend(email, password)
+        result = await unifiedAuthService.loginWithBackend(email, password);
       } else {
-        result = await unifiedAuthService.authenticateLocally(email, password, false)
+        // Use Firebase authentication by default
+        result = await unifiedAuthService.signInWithFirebase(
+          "email",
+          email,
+          password
+        );
       }
-      
+
       if (result.success) {
-        setUser(result.user)
-        setIsAuthenticated(true)
-        setAuthMethod(unifiedAuthService.getAuthMethod())
+        setUser(result.user);
+        setIsAuthenticated(true);
+        setAuthMethod(unifiedAuthService.getAuthMethod());
       }
-      
-      return result
+
+      return result;
     } catch (error) {
-      console.error('Login error:', error)
-      return { success: false, error: error.message }
+      console.error("Login error:", error);
+      return { success: false, error: error.message };
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const signup = async (email, password, name, useBackend = false) => {
     try {
-      setLoading(true)
-      
-      let result
+      setLoading(true);
+
+      let result;
       if (useBackend) {
         result = await unifiedAuthService.registerWithBackend({
           name,
           email,
-          password
-        })
+          password,
+        });
       } else {
-        result = await unifiedAuthService.authenticateLocally(email, password, true, name)
+        // Use Firebase authentication by default
+        result = await unifiedAuthService.registerWithFirebase(
+          email,
+          password,
+          name
+        );
       }
-      
+
       if (result.success) {
-        setUser(result.user)
-        setIsAuthenticated(true)
-        setAuthMethod(unifiedAuthService.getAuthMethod())
+        setUser(result.user);
+        setIsAuthenticated(true);
+        setAuthMethod(unifiedAuthService.getAuthMethod());
       }
-      
-      return result
+
+      return result;
     } catch (error) {
-      console.error('Signup error:', error)
-      return { success: false, error: error.message }
+      console.error("Signup error:", error);
+      return { success: false, error: error.message };
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const signInWithGoogle = async () => {
     try {
-      setLoading(true)
-      const result = await unifiedAuthService.signInWithFirebase('google')
-      
+      setLoading(true);
+      const result = await unifiedAuthService.signInWithFirebase("google");
+
       if (result.success) {
-        setUser(result.user)
-        setIsAuthenticated(true)
-        setAuthMethod('firebase')
+        setUser(result.user);
+        setIsAuthenticated(true);
+        setAuthMethod("firebase");
       }
-      
-      return result
+
+      return result;
     } catch (error) {
-      console.error('Google sign-in error:', error)
-      return { success: false, error: error.message }
+      console.error("Google sign-in error:", error);
+      return { success: false, error: error.message };
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const signInWithGitHub = async () => {
     try {
-      setLoading(true)
-      const result = await unifiedAuthService.signInWithFirebase('github')
-      
+      setLoading(true);
+      const result = await unifiedAuthService.signInWithFirebase("github");
+
       if (result.success) {
-        setUser(result.user)
-        setIsAuthenticated(true)
-        setAuthMethod('firebase')
+        setUser(result.user);
+        setIsAuthenticated(true);
+        setAuthMethod("firebase");
       }
-      
-      return result
+
+      return result;
     } catch (error) {
-      console.error('GitHub sign-in error:', error)
-      return { success: false, error: error.message }
+      console.error("GitHub sign-in error:", error);
+      return { success: false, error: error.message };
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const logout = async () => {
     try {
-      await unifiedAuthService.signOut()
-      setUser(null)
-      setIsAuthenticated(false)
-      setAuthMethod(null)
+      await unifiedAuthService.signOut();
+      setUser(null);
+      setIsAuthenticated(false);
+      setAuthMethod(null);
     } catch (error) {
-      console.error('Logout error:', error)
+      console.error("Logout error:", error);
       // Clear state anyway
-      setUser(null)
-      setIsAuthenticated(false)
-      setAuthMethod(null)
+      setUser(null);
+      setIsAuthenticated(false);
+      setAuthMethod(null);
     }
-  }
+  };
 
   const updateUser = async (updates) => {
     try {
-      const result = await unifiedAuthService.updateUserProfile(updates)
-      
+      const result = await unifiedAuthService.updateUserProfile(updates);
+
       if (result.success) {
-        setUser(result.user)
-        return result
+        setUser(result.user);
+        return result;
       }
-      
-      return result
+
+      return result;
     } catch (error) {
-      console.error('Update user error:', error)
-      return { success: false, error: error.message }
+      console.error("Update user error:", error);
+      return { success: false, error: error.message };
     }
-  }
+  };
 
   // Switch authentication method
   const switchAuthMethod = async (method) => {
-    if (method === authMethod) return { success: true }
+    if (method === authMethod) return { success: true };
 
     try {
-      setLoading(true)
-      
-      if (method === 'backend' && user) {
+      setLoading(true);
+
+      if (method === "backend" && user) {
         // Try to register/login with backend using current user data
         const result = await unifiedAuthService.registerWithBackend({
           name: user.name,
           email: user.email,
-          password: 'temp_password' // In real app, would need proper password handling
-        })
-        
+          password: "temp_password", // In real app, would need proper password handling
+        });
+
         if (result.success) {
-          setUser(result.user)
-          setAuthMethod('backend')
-          return { success: true }
+          setUser(result.user);
+          setAuthMethod("backend");
+          return { success: true };
         }
       }
-      
-      return { success: false, error: 'Method switch not supported' }
+
+      return { success: false, error: "Method switch not supported" };
     } catch (error) {
-      console.error('Error switching auth method:', error)
-      return { success: false, error: error.message }
+      console.error("Error switching auth method:", error);
+      return { success: false, error: error.message };
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Profile management methods
   const updateProfile = async (profileData) => {
     try {
-      setLoading(true)
-      const result = await unifiedAuthService.updateProfile(profileData)
-      
+      setLoading(true);
+      const result = await unifiedAuthService.updateProfile(profileData);
+
       if (result.success) {
-        setUser(result.user)
-        return { success: true }
+        setUser(result.user);
+        return { success: true };
       } else {
-        throw new Error(result.error || 'Failed to update profile')
+        throw new Error(result.error || "Failed to update profile");
       }
     } catch (error) {
-      console.error('Error updating profile:', error)
-      throw error
+      console.error("Error updating profile:", error);
+      throw error;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const changePassword = async (currentPassword, newPassword) => {
     try {
-      setLoading(true)
-      const result = await unifiedAuthService.changePassword(currentPassword, newPassword)
-      
+      setLoading(true);
+      const result = await unifiedAuthService.changePassword(
+        currentPassword,
+        newPassword
+      );
+
       if (result.success) {
-        return { success: true }
+        return { success: true };
       } else {
-        throw new Error(result.error || 'Failed to change password')
+        throw new Error(result.error || "Failed to change password");
       }
     } catch (error) {
-      console.error('Error changing password:', error)
-      throw error
+      console.error("Error changing password:", error);
+      throw error;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const deleteAccount = async () => {
     try {
-      setLoading(true)
-      const result = await unifiedAuthService.deleteAccount()
-      
+      setLoading(true);
+      const result = await unifiedAuthService.deleteAccount();
+
       if (result.success) {
-        setUser(null)
-        setIsAuthenticated(false)
-        setAuthMethod(null)
-        return { success: true }
+        setUser(null);
+        setIsAuthenticated(false);
+        setAuthMethod(null);
+        return { success: true };
       } else {
-        throw new Error(result.error || 'Failed to delete account')
+        throw new Error(result.error || "Failed to delete account");
       }
     } catch (error) {
-      console.error('Error deleting account:', error)
-      throw error
+      console.error("Error deleting account:", error);
+      throw error;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const value = {
     user,
@@ -298,17 +319,12 @@ export const AuthProvider = ({ children }) => {
     switchAuthMethod,
     // Utility functions
     getAuthToken: () => unifiedAuthService.getAuthToken(),
-    isBackendAuth: () => authMethod === 'backend',
-    isFirebaseAuth: () => authMethod === 'firebase',
-    isLocalAuth: () => authMethod === 'local'
-  }
+    isBackendAuth: () => authMethod === "backend",
+    isFirebaseAuth: () => authMethod === "firebase",
+    isLocalAuth: () => authMethod === "local",
+  };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  )
-}
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
 
-export default AuthContext
-
+export default AuthContext;

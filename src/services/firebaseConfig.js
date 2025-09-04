@@ -1,119 +1,64 @@
 // Firebase configuration
-// Replace these with your actual Firebase project credentials
+// IMPORTANT: Set up your Firebase credentials in .env file
+// Get these from Firebase Console > Project Settings > General > Your apps
 const firebaseConfig = {
-  apiKey: "demo-api-key",
-  authDomain: "asset-tracker-demo.firebaseapp.com",
-  projectId: "asset-tracker-demo",
-  storageBucket: "asset-tracker-demo.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef123456"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "your-api-key-here",
+  authDomain:
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ||
+    "your-project-id.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "your-project-id",
+  storageBucket:
+    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
+    "your-project-id.appspot.com",
+  messagingSenderId:
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "your-sender-id",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "your-app-id",
+  measurementId:
+    import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "your-measurement-id",
 };
 
-// Mock Firebase Auth implementation for demo purposes
-// In a real implementation, you would use the actual Firebase SDK
-
-class MockFirebaseAuth {
-  constructor() {
-    this.currentUser = null;
-    this.authStateListeners = [];
-  }
-
-  // Mock Google Sign-In
-  async signInWithPopup(provider) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const mockUser = {
-          uid: 'firebase_' + Date.now(),
-          email: 'user@gmail.com',
-          displayName: 'Firebase User',
-          photoURL: 'https://via.placeholder.com/150',
-          providerId: 'google.com'
-        };
-        this.currentUser = mockUser;
-        this.notifyAuthStateChange(mockUser);
-        resolve({ user: mockUser });
-      }, 1000);
-    });
-  }
-
-  // Mock GitHub Sign-In
-  async signInWithGitHub() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const mockUser = {
-          uid: 'firebase_github_' + Date.now(),
-          email: 'user@github.com',
-          displayName: 'GitHub User',
-          photoURL: 'https://via.placeholder.com/150',
-          providerId: 'github.com'
-        };
-        this.currentUser = mockUser;
-        this.notifyAuthStateChange(mockUser);
-        resolve({ user: mockUser });
-      }, 1000);
-    });
-  }
-
-  // Mock sign out
-  async signOut() {
-    this.currentUser = null;
-    this.notifyAuthStateChange(null);
-  }
-
-  // Mock auth state listener
-  onAuthStateChanged(callback) {
-    this.authStateListeners.push(callback);
-    // Immediately call with current state
-    callback(this.currentUser);
-    
-    // Return unsubscribe function
-    return () => {
-      const index = this.authStateListeners.indexOf(callback);
-      if (index > -1) {
-        this.authStateListeners.splice(index, 1);
-      }
-    };
-  }
-
-  notifyAuthStateChange(user) {
-    this.authStateListeners.forEach(callback => callback(user));
-  }
-}
-
-// Mock providers
-class MockGoogleAuthProvider {
-  static credential() {
-    return { providerId: 'google.com' };
-  }
-}
-
-class MockGitHubAuthProvider {
-  static credential() {
-    return { providerId: 'github.com' };
-  }
-}
-
-// Export mock Firebase services
-export const auth = new MockFirebaseAuth();
-export const GoogleAuthProvider = MockGoogleAuthProvider;
-export const GitHubAuthProvider = MockGitHubAuthProvider;
-
-// For real Firebase implementation, uncomment and use this:
-/*
-import { initializeApp } from 'firebase/app';
-import { 
-  getAuth, 
-  GoogleAuthProvider, 
+// Real Firebase implementation
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  GoogleAuthProvider,
   GithubAuthProvider,
   signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
-  onAuthStateChanged 
-} from 'firebase/auth';
+  onAuthStateChanged,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  updateProfile,
+  updatePassword,
+  deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(app);
-export { GoogleAuthProvider, GithubAuthProvider, signInWithPopup, signOut, onAuthStateChanged };
-*/
+
+// Export authentication providers and methods
+export {
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  updateProfile,
+  updatePassword,
+  deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+};
 
 export default firebaseConfig;
-
