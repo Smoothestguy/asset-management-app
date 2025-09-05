@@ -26,6 +26,7 @@ import {
   LogOut,
   User,
 } from "lucide-react";
+import Logo from "./components/Logo";
 import { usePersonalAssets } from "./hooks/usePersonalAssets";
 import { ASSET_CATEGORIES, getSubcategoryLabel } from "./lib/assetCategories";
 import AssetDetailDialog from "./components/AssetDetailDialog";
@@ -155,17 +156,7 @@ function App() {
     >
       {/* Logo - Fixed at top */}
       <div className="p-6 border-b border-gray-700/50 flex-shrink-0">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(0,255,255,0.4)]">
-            <Zap className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-white neon-cyan">
-              ASSET TRACKER
-            </h1>
-            <p className="text-xs text-gray-400">Professional Edition</p>
-          </div>
-        </div>
+        <Logo size="medium" showText={true} glowColor="cyan" />
       </div>
 
       {/* Scrollable Navigation */}
@@ -284,13 +275,8 @@ function App() {
           </motion.div>
 
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(0,255,255,0.3)]">
-              <Zap className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-white neon-text">
-                ASSET TRACKER
-              </h1>
+            <Logo size="small" showText={true} glowColor="cyan" />
+            <div className="ml-2">
               <div className="flex items-center space-x-1">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-xs text-green-400 font-medium">
